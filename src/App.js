@@ -35,7 +35,7 @@ class App extends React.Component {
     return (
       <Layout>
         <Navbar/>
-        {!isLoaded ? <p>loading...</p> : <List students={students}/>}
+        {!isLoaded ? <p>loading...</p> : <List students={students} hoverable/>}
         <Footer />
       </Layout>
     );
