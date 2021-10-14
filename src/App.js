@@ -11,8 +11,14 @@ class App extends React.Component {
     super()
     this.state = {
       students: {},
-      isLoaded: false
+      isLoaded: false,
+      id: 0,
+      name: ''
     }
+    // this.handleIdChange = this.handleIdChange.bind(this);
+    // this.handleNameChange = this.handleNameChange.bind(this);
+    this.handleChange = this.handleChange.bind(this)
+    this.handleSubmit = this.handleSubmit.bind(this);
   }
 
   componentDidMount() {
@@ -30,11 +36,40 @@ class App extends React.Component {
     })
   }
 
+  handleSubmit(event) {
+    const id = this.state.id
+    const name = this.state.name
+    event.preventDefault()
+    const students = [...this.state.students, {"id": id, "name": name}]
+    this.setState({students: students})
+  }
+
+  // handleIdChange(event) {
+  //   this.setState({id: event.target.value});  
+  // }
+
+  // handleNameChange(event) {
+  //   this.setState({name: event.target.value});  
+  // }
+
+  handleChange(event) {
+    this.setState({
+      [event.target.name]: event.target.value
+    })
+  }
+
   render(){
     const { students, isLoaded } = this.state
     return (
       <Layout>
         <Navbar/>
+
+        <form onSubmit={this.handleSubmit}>
+          <input value={this.state.id} type="number" name="id" placeholder="id" onChange={this.handleChange}></input>
+          <input value={this.state.name} type="text" name="name" placeholder="name" onChange={this.handleChange}></input>
+          <button type="submit" value="submit">Add student</button>
+        </form>
+        
         {!isLoaded ? <p>loading...</p> : <List students={students} hoverable/>}
         <Footer />
       </Layout>
