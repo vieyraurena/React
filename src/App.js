@@ -1,27 +1,23 @@
 import './App.css';
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 // import { students } from './students';
 import List from './components/List'
 import Navbar from './components/Navbar';
 import Layout from './components/Layout'
 import Footer from './components/Footer';
 
-class App extends React.Component {
-  constructor() {
-    super()
-    this.state = {
-      students: {},
-      isLoaded: false,
-      id: 0,
-      name: ''
-    }
-    // this.handleIdChange = this.handleIdChange.bind(this);
-    // this.handleNameChange = this.handleNameChange.bind(this);
-    this.handleChange = this.handleChange.bind(this)
-    this.handleSubmit = this.handleSubmit.bind(this);
-  }
+function App () {
+  const [students, setStudents] = useState([])
+  const [isLoaded, setIsLoaded] = useState(false)
+  const [idInput, setIdInput] = useState()
+  const [nameInput, setNameInput] = useState('')
+  const [alert, setAlert] = useState(false)
 
-  componentDidMount() {
+  useEffect(()=>{
+    fetchStudents()
+  }, [alert])
+
+  const fetchStudents = () => {
     fetch('https://students.hasura.app/api/rest/students', {
       method: 'GET',
       headers: {
@@ -29,52 +25,43 @@ class App extends React.Component {
       }
     }).then(response => response.json())
       .then(result => {
-        this.setState({
-          students: result.students,
-          isLoaded: true
-      })
+        setIsLoaded(true)
+        setStudents(result.students)
     })
   }
 
-  handleSubmit(event) {
-    const id = this.state.id
-    const name = this.state.name
+  const insertStudent = async (id, name) => {
+    return fetch('https://students.hasura.app/api/rest/student', {
+      method: 'POST',
+      headers: {
+        'x-hasura-admin-secret': '733M3Tgq5IK2ALRXFSivpX86TGJX82goni63azRwZGCtVY1qN4t8521f1LE4iKxq'
+      },
+      body: JSON.stringify({"id": id, "name": name})
+  }).then(response => response.json())
+   .catch(error => console.log(error))
+  }
+
+  const handleSubmit = (event) => {
     event.preventDefault()
-    const students = [...this.state.students, {"id": id, "name": name}]
-    this.setState({students: students})
+    insertStudent(idInput, nameInput).then(() => setAlert(true))
+    // setStudents({students: students})
   }
 
-  // handleIdChange(event) {
-  //   this.setState({id: event.target.value});  
-  // }
-
-  // handleNameChange(event) {
-  //   this.setState({name: event.target.value});  
-  // }
-
-  handleChange(event) {
-    this.setState({
-      [event.target.name]: event.target.value
-    })
-  }
-
-  render(){
-    const { students, isLoaded } = this.state
-    return (
+  return (
       <Layout>
         <Navbar/>
 
-        <form onSubmit={this.handleSubmit}>
-          <input value={this.state.id} type="number" name="id" placeholder="id" onChange={this.handleChange}></input>
-          <input value={this.state.name} type="text" name="name" placeholder="name" onChange={this.handleChange}></input>
+        <form onSubmit={handleSubmit}>
+          <input value={idInput} type="number" name="id" placeholder="id" onChange={e => setIdInput(e.target.value)}></input>
+          <input value={nameInput} type="text" name="name" placeholder="name" onChange={e => setNameInput(e.target.value)}></input>
           <button type="submit" value="submit">Add student</button>
         </form>
+        {alert && <h2>Nuevo estudiante guardado</h2>}
         
         {!isLoaded ? <p>loading...</p> : <List students={students} hoverable/>}
         <Footer />
       </Layout>
     );
   }
-}
 
 export default App;
