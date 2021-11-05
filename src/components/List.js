@@ -1,10 +1,27 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 
 function List(props) {
-    const [count, setCount] = useState(0)
-    const [isChecked, setIsChecked] = useState(false)
+    const [students, setStudents] = useState([])
+    const [isLoaded, setIsLoaded] = useState(false)
 
-    const handleOnChange = () => setIsChecked(!isChecked)
+    useEffect(()=>{
+        fetchStudents()
+    }, [alert])
+
+    const fetchStudents = () => {
+        fetch(`https://students.hasura.app/api/rest/students`, {
+        method: 'GET',
+        headers: {
+            'x-hasura-admin-secret': '733M3Tgq5IK2ALRXFSivpX86TGJX82goni63azRwZGCtVY1qN4t8521f1LE4iKxq'
+        }
+        }).then(response => response.json())
+        .then(result => {
+            setIsLoaded(true)
+            setStudents(result.students)
+        })
+    }
+
+    if (!isLoaded) return <p>loading...</p>
     
     return (
         <div style={{flex: "1 0 auto"}}>
@@ -18,7 +35,7 @@ function List(props) {
                 </thead>
                 <tbody >
                     {
-                        props.students.map(student => 
+                        students.map(student => 
                             <tr className={props.hoverable ? 'hoverable' : ''} key={student.id}>
                                 <td>{student.id}</td>
                                 <td>{student.name}</td>
