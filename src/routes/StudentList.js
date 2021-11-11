@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { Link, Outlet } from 'react-router-dom'
+import { Link } from 'react-router-dom'
 
 function StudentList(props) {
     const [students, setStudents] = useState([])
@@ -32,7 +32,6 @@ function StudentList(props) {
                     <tr>
                         <th>ID</th>
                         <th>Name</th>
-                        {/* <th>Is Present?</th> */}
                     </tr>
                 </thead>
                 <tbody >
@@ -41,14 +40,12 @@ function StudentList(props) {
                             <tr className={props.hoverable ? 'hoverable' : ''} key={student.id}>
                                 <td><Link to={`/student/${student.id}`}>{student.id}</Link></td>
                                 <td>{student.name}</td>
-                                {/* <td><input type="checkbox" checked={isChecked} onChange={handleOnChange} style={{margin:"auto"}}/></td> */}
                             </tr>
                         )
                     }
                     <tr>
                         <td></td>
                         <td></td>
-                        {/* <td>Presentes: {count}</td> */}
                     </tr>
                 </tbody>
             </table>
