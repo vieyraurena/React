@@ -1,12 +1,13 @@
 import { useState, useEffect } from 'react'
+import { Link, Outlet } from 'react-router-dom'
 
-function List(props) {
+function StudentList(props) {
     const [students, setStudents] = useState([])
     const [isLoaded, setIsLoaded] = useState(false)
 
     useEffect(()=>{
         fetchStudents()
-    })
+    }, [isLoaded])
 
     const fetchStudents = () => {
         fetch(`${process.env.REACT_APP_API_URL}students`, {
@@ -25,6 +26,7 @@ function List(props) {
     
     return (
         <div style={{flex: "1 0 auto"}}>
+            <h1>Students List</h1>
             <table>
                 <thead>
                     <tr>
@@ -37,7 +39,7 @@ function List(props) {
                     {
                         students.map(student => 
                             <tr className={props.hoverable ? 'hoverable' : ''} key={student.id}>
-                                <td>{student.id}</td>
+                                <td><Link to={`/student/${student.id}`}>{student.id}</Link></td>
                                 <td>{student.name}</td>
                                 {/* <td><input type="checkbox" checked={isChecked} onChange={handleOnChange} style={{margin:"auto"}}/></td> */}
                             </tr>
@@ -54,4 +56,4 @@ function List(props) {
     )
 }
 
-export default List
+export default StudentList
