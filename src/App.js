@@ -1,19 +1,35 @@
 import './App.css';
-import React, { useState, useEffect } from 'react';
-import List from './components/List'
+import React from 'react';
+import StudentList from './routes/StudentList'
 import Navbar from './components/Navbar';
 import Layout from './components/Layout'
 import Footer from './components/Footer';
-import StudentForm from './components/StudentForm';
+import StudentForm from './routes/StudentForm';
+import { Routes, Route } from 'react-router-dom'
+import Student from './routes/Student';
 
 function App () {
    return (
+     <>
       <Layout>
-        <Navbar/>
-        <StudentForm />
-        <List hoverable/>
+      <Navbar/>
+      <Routes>
+          <Route path='/' element={<StudentList hoverable/>} />
+          <Route  path='/students' element={<StudentList hoverable />} />
+          <Route  path='/student/:StudentId' element={<Student />} />
+          <Route  path='/addStudent' element={<StudentForm />} />
+          <Route  path='/updateStudent/:StudentId' element={<StudentForm />} />
+          <Route path="*" element={
+            <main style={{ padding: "1rem" }}>
+              <p>There's nothing here!</p>
+            </main>
+            }
+          />
+        </Routes>
+
         <Footer />
       </Layout>
+    </>
     );
   }
 

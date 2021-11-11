@@ -1,18 +1,19 @@
 import { useState, useEffect } from 'react'
+import { Link } from 'react-router-dom'
 
-function List(props) {
+function StudentList(props) {
     const [students, setStudents] = useState([])
     const [isLoaded, setIsLoaded] = useState(false)
 
     useEffect(()=>{
         fetchStudents()
-    }, [alert])
+    }, [isLoaded])
 
     const fetchStudents = () => {
-        fetch(`https://students.hasura.app/api/rest/students`, {
+        fetch(`${process.env.REACT_APP_API_URL}students`, {
         method: 'GET',
         headers: {
-            'x-hasura-admin-secret': '733M3Tgq5IK2ALRXFSivpX86TGJX82goni63azRwZGCtVY1qN4t8521f1LE4iKxq'
+            'x-hasura-admin-secret': process.env.REACT_APP_HASURA_SECRET
         }
         }).then(response => response.json())
         .then(result => {
@@ -25,28 +26,26 @@ function List(props) {
     
     return (
         <div style={{flex: "1 0 auto"}}>
+            <h1>Students List</h1>
             <table>
                 <thead>
                     <tr>
                         <th>ID</th>
                         <th>Name</th>
-                        {/* <th>Is Present?</th> */}
                     </tr>
                 </thead>
                 <tbody >
                     {
                         students.map(student => 
                             <tr className={props.hoverable ? 'hoverable' : ''} key={student.id}>
-                                <td>{student.id}</td>
+                                <td><Link to={`/student/${student.id}`}>{student.id}</Link></td>
                                 <td>{student.name}</td>
-                                {/* <td><input type="checkbox" checked={isChecked} onChange={handleOnChange} style={{margin:"auto"}}/></td> */}
                             </tr>
                         )
                     }
                     <tr>
                         <td></td>
                         <td></td>
-                        {/* <td>Presentes: {count}</td> */}
                     </tr>
                 </tbody>
             </table>
@@ -54,4 +53,4 @@ function List(props) {
     )
 }
 
-export default List
+export default StudentList
