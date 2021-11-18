@@ -6,10 +6,13 @@ import {BrowserRouter, Route, Routes} from 'react-router-dom'
 import StudentList from './routes/StudentList'
 import Student from './routes/Student'
 import StudentForm from './routes/StudentForm'
+import { AlertProvider } from './hooks/useAlert';
 
 ReactDOM.render(
   <BrowserRouter>
+    <AlertProvider>
       <App />
+    </AlertProvider>
   </BrowserRouter>,
   document.getElementById('root')
 );

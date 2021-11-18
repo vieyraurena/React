@@ -7,12 +7,16 @@ import Footer from './components/Footer';
 import StudentForm from './routes/StudentForm';
 import { Routes, Route } from 'react-router-dom'
 import Student from './routes/Student';
+import AlertTag from './components/AlertTag';
+import useAlert from './hooks/useAlert';
 
 function App () {
+  const { type, message, isOpened } = useAlert()
    return (
      <>
       <Layout>
       <Navbar/>
+      <AlertTag isOpened={isOpened} type={type} message={message}/>
       <Routes>
           <Route path='/' element={<StudentList hoverable/>} />
           <Route  path='/students' element={<StudentList hoverable />} />

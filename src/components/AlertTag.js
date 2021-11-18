@@ -1,8 +1,16 @@
+import react from 'react'
+import ReactDOM from 'react-dom'
 
+const alertContainer = document.querySelector("#alert-root")
 
-const AlertTag = (props) => {
-    return (
-        <span>{props.message}</span>
+const AlertTag = ({ message, type, isOpened, onClose, success}) => {
+
+    if (!isOpened) return null
+    return ReactDOM.createPortal(
+            <div className={`alert ${type}`}>
+                <span>{message}</span>
+            </div>,
+        alertContainer
     )
 }
 

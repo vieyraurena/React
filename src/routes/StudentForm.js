@@ -1,13 +1,14 @@
 import { useState, useEffect } from "react"
-import { Outlet, useNavigate } from "react-router"
-import AlertTag from "../components/AlertTag"
+import { useNavigate } from "react-router"
+import useAlert from "../hooks/useAlert"
 
 const StudentForm = () => {
     const [idInput, setIdInput] = useState()
     const [nameInput, setNameInput] = useState('')
-    const [alert, setAlert] = useState(false)
+    // const [alert, setAlert] = useState(false)
     const [isLoading, setIsLoading] = useState(false)
     const navigate = useNavigate()
+    const { sendAlert } = useAlert()
 
     const insertStudent = async (id, name) => {
         setIsLoading(true)
@@ -21,9 +22,9 @@ const StudentForm = () => {
       .then(data => {
         setIsLoading(false)
           if (data.insert_students_one === null)  {
-                setAlert('ID de estudiante repetido')
+                sendAlert({type: 'warning', message: 'student is repeated'})
             } else {
-                setAlert('Nuevo estudiante ingresado')
+              sendAlert({type: 'success', message: 'new student added'})
                 setIdInput(0)
                 setNameInput('')
                 navigate('/')
@@ -35,15 +36,14 @@ const StudentForm = () => {
       const handleSubmit = (event) => {
         event.preventDefault()
         insertStudent(idInput, nameInput)
-        // setStudents({students: students})
       }
 
-      useEffect(() => {
-        const alertTimer = setTimeout(() => {
-            setAlert('')
-        }, 5000)
-        return () => clearTimeout(alertTimer)
-      }, [alert])
+      // useEffect(() => {
+      //   const alertTimer = setTimeout(() => {
+      //       setAlert('')
+      //   }, 5000)
+      //   return () => clearTimeout(alertTimer)
+      // }, [alert])
 
     return (
         <>
